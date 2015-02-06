@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Frame;
 
 import javax.swing.JFrame;
@@ -25,6 +26,8 @@ public class Application {
 		mainFrame.setVisible(true);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.add(canvas);
+		canvas.addDrowableItem(new FocusItem());
+		canvas.addDrowableItem(new FocusItem(50, 30, 10, Color.BLACK));
 	}
 
 }
