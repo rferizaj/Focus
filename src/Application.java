@@ -42,13 +42,14 @@ public class Application {
 		
 		for(int i = 0; i < NUMBER_OF_ITEMS; i ++){
 			//to put them around the circle: sin(360 * index/count) * radius
-			int tempY = DIMX/2 + (int)(Math.cos(180 * (float)i / (float)NUMBER_OF_ITEMS) * radius);
-			int tempX = DIMY/2 + (int)(Math.sin(180 * (float)i / (float)NUMBER_OF_ITEMS) * radius);
+			double tempValue = 360 / NUMBER_OF_ITEMS * i;
+			//converting from degree to radiant
+			tempValue = tempValue * 2 * Math.PI / 360;
+			int tempY = DIMY/2 + (int)(Math.cos(tempValue) * radius);
+			int tempX = DIMX/2 + (int)(Math.sin(tempValue) * radius);
 			//TODO: change the color ?
 			canvas.addDrowableItem(new RadusItem(tempX, tempY, RADIUS_ITEM_BASIC_DIMENSION, Color.CYAN));
 			System.out.println("Created radius item " + i + " x " + tempX + " y " + tempY);
-		}
-		
+		}	
 	}
-
 }
