@@ -27,7 +27,8 @@ public class Application {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.add(canvas);
 		canvas.addDrowableItem(new FocusItem());
-		canvas.addDrowableItem(new FocusItem(50, 30, 10, Color.BLACK));
+		canvas.addDrowableItem(new FocusItem(50, 70, 80, Color.PINK));
+		System.out.println("Created focus item");
 	}
 
 }

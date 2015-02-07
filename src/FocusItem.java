@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Path2D;
 
 
 class FocusItem extends Drawable {
@@ -20,9 +21,16 @@ class FocusItem extends Drawable {
 	
 	@Override
 	public void draw(Graphics2D g2) {
-		// TODO Auto-generated method stub
-		g2.setColor(color);
-        g2.drawOval(xPosition, yPosition, dimension, dimension);
+		g2.setPaint(color);
+        Path2D star = new Path2D.Float (); 
+        star.moveTo (xPosition + dimension/5F, yPosition + dimension-1); 
+        star.lineTo (xPosition + dimension/2F, yPosition); 
+        star.lineTo (xPosition + 4*dimension/5F, yPosition + dimension-1); 
+        star.lineTo (xPosition, yPosition + 2*dimension/5F); 
+        star.lineTo (xPosition + dimension-1, yPosition + 2*dimension/5F); 
+        star.closePath (); 
+        g2.draw (star);
+        g2.fill (star);
 	}
 
 }
