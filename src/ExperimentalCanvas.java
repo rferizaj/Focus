@@ -32,4 +32,19 @@ class ExperimentalCanvas extends Canvas {
 	public void addDrowableItem(Drawable drawable){
 		list.add(drawable);
 	}
+	
+	public void startAnimation(){
+		System.out.println("Started animation");
+		Iterator<Drawable> i = list.iterator();
+        while(i.hasNext()){
+        	Drawable temp = i.next();
+        	if (temp.getClass().equals(FocusItem.class))
+        	{
+        		System.out.println("Started focus animation");
+        		((FocusItem) temp).run();
+        		break;
+        	}
+        }
+	}
+
 }

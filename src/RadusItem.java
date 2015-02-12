@@ -3,18 +3,12 @@ import java.awt.Graphics2D;
 
 class RadusItem extends Drawable {
 
-	public RadusItem(){
-		xPosition = 10;
-		yPosition = 10;
-		dimension = 30;
-		color = Color.YELLOW;
-	}
-
-	public RadusItem(int xPosition, int yPosition, int dimension, Color color){
+	public RadusItem(int xPosition, int yPosition, int dimension, Color color, ExperimentalCanvas experimentalCanvas){
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
 		this.dimension = dimension;
 		this.color = color;
+		this.experimentalCanvas = experimentalCanvas;
 	}
 	
 	@Override
@@ -24,5 +18,12 @@ class RadusItem extends Drawable {
         g2.fillOval(xPosition - dimension/2, yPosition - dimension/2, dimension, dimension);
 	}
 	
-	
+	/**
+	 * TODO Method to define
+	 * @param dimension
+	 * @param newDimension
+	 */
+	public void change(String dimension, int newDimension){
+		
+	}
 }

@@ -30,7 +30,7 @@ public class Application {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.add(canvas);
 		
-		canvas.addDrowableItem(new FocusItem(DIMX/2 - DIM_FOCUS/2, DIMY/2 - DIM_FOCUS/2, DIM_FOCUS, Color.PINK));
+		canvas.addDrowableItem(new FocusItem(DIMX/2 - DIM_FOCUS/2, DIMY/2 - DIM_FOCUS/2, DIM_FOCUS, Color.PINK, canvas));
 		System.out.println("Created focus item");
 		
 		//the reading of the file must set this variables
@@ -48,8 +48,10 @@ public class Application {
 			int tempY = DIMY/2 + (int)(Math.cos(tempValue) * radius);
 			int tempX = DIMX/2 + (int)(Math.sin(tempValue) * radius);
 			//TODO: change the color ?
-			canvas.addDrowableItem(new RadusItem(tempX, tempY, RADIUS_ITEM_BASIC_DIMENSION, Color.CYAN));
-			System.out.println("Created radius item " + i + " x " + tempX + " y " + tempY);
+			canvas.addDrowableItem(new RadusItem(tempX, tempY, RADIUS_ITEM_BASIC_DIMENSION, Color.CYAN, canvas));
+			System.out.println("Created radius item " + i);
 		}	
+		
+		canvas.startAnimation();
 	}
 }
