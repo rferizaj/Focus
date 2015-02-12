@@ -18,12 +18,4 @@ class RadusItem extends Drawable {
         g2.fillOval(xPosition - dimension/2, yPosition - dimension/2, dimension, dimension);
 	}
 	
-	/**
-	 * TODO Method to define
-	 * @param dimension
-	 * @param newDimension
-	 */
-	public void change(String dimension, int newDimension){
-		
-	}
 }
