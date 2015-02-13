@@ -24,4 +24,20 @@ abstract class Drawable {
 	public void setColor(Color color) {
 		this.color = color;
 	}
+
+	public int getxPosition() {
+		return xPosition;
+	}
+
+	public int getyPosition() {
+		return yPosition;
+	}
+
+	public int getDimension() {
+		return dimension;
+	}
+
+	public Color getColor() {
+		return color;
+	}
 }

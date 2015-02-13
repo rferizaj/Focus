@@ -1,4 +1,5 @@
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -18,18 +19,36 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 	private Timer constantTimer;
 	private short loopNumber;
 	private static double positionOfSpinning;
+	private boolean spin;
+	private double radius;
+	private double dimension;
+	private boolean bigChange;
+	private boolean changeSize;
 	
-	public ExperimentalCanvas() {
+	/**
+	 * create the canvas
+	 * @param radius
+	 * @param spin true if the items will spin
+	 */
+	public ExperimentalCanvas(double dimension, boolean spin) {
 		// TODO Auto-generated constructor stub
 		super();
 		list = new Vector<Drawable>();
 		randomTimer = new Timer(1000, this);
 		randomTimer.setRepeats(false);
-		constantTimer = new Timer(10, this);
-		constantTimer.setRepeats(true);
 		loopNumber = 0;
-		NumberOfLoops = 10;
-		positionOfSpinning = 0;
+		NumberOfLoops = 6;
+		
+		this.spin = spin;
+		this.dimension = dimension;
+		
+		if(spin){
+			constantTimer = new Timer(10, this);
+			constantTimer.setRepeats(true);
+			positionOfSpinning = 0;
+		}
+		
+		setBackground(Color.WHITE);
 	}
 
 	public void paint (Graphics g) {
@@ -50,7 +69,8 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 	
 	public void startAnimation(){
 		randomTimer.start();
-		constantTimer.start();
+		if(spin)
+			constantTimer.start();
 	}
 
 	@Override
@@ -60,15 +80,21 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 		}
 		else
 			if(loopNumber < NumberOfLoops*2){
-				System.out.println("Animation started");
 				loopNumber++;
 				//isVisible = !isVisible;
 				if(loopNumber == NumberOfLoops){
 					int element = (int)getRandom(1, list.size()-1);
 					//this is the element to change
 					//change the element
-					System.out.println("Element changed");
-					list.get(element).setDimension(60);
+					if(changeSize){
+						if(bigChange){
+							list.get(element).setDimension(list.get(element).getDimension() + list.get(element).getDimension());
+						}
+						else {
+							list.get(element).setDimension(list.get(element).getDimension() + list.get(element).getDimension() / 2 );
+						}
+					}
+					
 					((FocusItem) list.get(0)).changeVisible();
 				}
 				else {
@@ -101,7 +127,6 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 			int number = list.size() -1;
 			positionOfSpinning +=0.02;
 			double tempValue = (360) / number * i;
-			int radius = 300;
 			int dim = 800;
 			//converting from degree to radiant
 			tempValue = tempValue * 2 * Math.PI / 360;
@@ -112,5 +137,35 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 			list.get(i).yPosition = tempY;
 		}
 		repaint();
+	}
+	
+	
+	public void createItems(int radius, int dimensionOfTheFocus, int dimensionOfTheRadius, int deltaChange, int numberOfRadiusItems, int numberOfBlinks, boolean bigChange, boolean changeSize){
+		
+		this.radius = radius;
+		this.bigChange = bigChange;
+		this.changeSize = changeSize;
+		
+		addDrowableItem(new FocusItem((int)dimension/2 - dimensionOfTheFocus/2, (int)dimension/2 - dimensionOfTheFocus/2, dimensionOfTheFocus, Color.PINK));
+		System.out.println("Created focus item");
+		//the reading of the file must set this variables
+		//radius (distance between the focus and the items)
+		//has to change (if there will be changes or no)
+		//color or shape
+		//...
+		
+		for(int i = 0; i < numberOfRadiusItems; i ++){
+			//to put them around the circle: sin(360 * index/count) * radius
+			double tempValue = 360 / numberOfRadiusItems * i;
+			//converting from degree to radiant
+			tempValue = tempValue * 2 * Math.PI / 360;
+			int tempY = (int)(dimension/2 + (int)(Math.cos(tempValue) * radius));
+			int tempX = (int)(dimension/2 + (int)(Math.sin(tempValue) * radius));
+			
+			//TODO: change the color or shape? read the file
+			int dimensionOfTheRadiusShape = (int)getRandom(dimensionOfTheRadius - deltaChange, dimensionOfTheRadius + deltaChange);
+			addDrowableItem(new RadusItem(tempX, tempY, dimensionOfTheRadiusShape, Color.CYAN));
+			System.out.println("Created radius item " + i);
+		}	
 	}
 }
