@@ -57,7 +57,9 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 				//this is the element to change
 				while(list.get(element).getClass() == FocusItem.class)
 					element = (int)getRandom(0, list.size()-1);
-				
+				//change the element
+				System.out.println("Element changed");
+				list.get(element).setDimension(60);
 			}
 			else {
 				Iterator<Drawable> i = list.iterator();
