@@ -3,12 +3,11 @@ import java.awt.Graphics2D;
 
 class RadusItem extends Drawable {
 
-	public RadusItem(int xPosition, int yPosition, int dimension, Color color, ExperimentalCanvas experimentalCanvas){
+	public RadusItem(int xPosition, int yPosition, int dimension, Color color){
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
 		this.dimension = dimension;
 		this.color = color;
-		this.experimentalCanvas = experimentalCanvas;
 	}
 	
 	@Override

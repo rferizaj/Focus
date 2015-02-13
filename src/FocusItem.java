@@ -2,14 +2,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 
-class FocusItem extends Drawable implements Runnable {
-	private boolean isVisible;
+class FocusItem extends Drawable {
 	
-	public FocusItem(int xPosition, int yPosition, int dimension, Color color, ExperimentalCanvas experimentalCanvas){
+	private boolean isVisible;
+		
+	public FocusItem(int xPosition, int yPosition, int dimension, Color color){
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
 		this.dimension = dimension;
-		this.experimentalCanvas = experimentalCanvas;
 		this.color = color;
 		isVisible = true;
 	}
@@ -30,18 +30,11 @@ class FocusItem extends Drawable implements Runnable {
 		}
 	}
 	
-	@Override
-	public void run() {
-		for(int i = 0; i < 10; i++){
-			isVisible = !isVisible;
-			experimentalCanvas.repaint();
-			try {
-				//sleep for the time
-				//TODO: define time to sleep
-				Thread.sleep(getRandom(300l, 1200l));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+	public void setVisible(boolean isVisible){
+		this.isVisible = isVisible;
+	}
+	
+	public void changeVisible(){
+		isVisible = !isVisible;
 	}
 }
