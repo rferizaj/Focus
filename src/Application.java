@@ -47,7 +47,7 @@ public class Application {
 			tempValue = tempValue * 2 * Math.PI / 360;
 			int tempY = DIMY/2 + (int)(Math.cos(tempValue) * radius);
 			int tempX = DIMX/2 + (int)(Math.sin(tempValue) * radius);
-			//TODO: change the color ?
+			//TODO: change the color or shape? read the file
 			canvas.addDrowableItem(new RadusItem(tempX, tempY, RADIUS_ITEM_BASIC_DIMENSION, Color.CYAN));
 			System.out.println("Created radius item " + i);
 		}	

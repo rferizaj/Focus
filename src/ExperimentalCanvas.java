@@ -12,10 +12,12 @@ import javax.swing.Timer;
 
 class ExperimentalCanvas extends Canvas implements ActionListener {
 	
-	final static short NUMBERS_OF_LOOP = 15;
+	private short NumberOfLoops;
 	protected List<Drawable> list;
 	private Timer randomTimer;
+	private Timer constantTimer;
 	private short loopNumber;
+	private static double positionOfSpinning;
 	
 	public ExperimentalCanvas() {
 		// TODO Auto-generated constructor stub
@@ -23,7 +25,11 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 		list = new Vector<Drawable>();
 		randomTimer = new Timer(1000, this);
 		randomTimer.setRepeats(false);
+		constantTimer = new Timer(10, this);
+		constantTimer.setRepeats(true);
 		loopNumber = 0;
+		NumberOfLoops = 10;
+		positionOfSpinning = 0;
 	}
 
 	public void paint (Graphics g) {
@@ -44,41 +50,39 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 	
 	public void startAnimation(){
 		randomTimer.start();
+		constantTimer.start();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(loopNumber < NUMBERS_OF_LOOP){
-			System.out.println("Animation started");
-			loopNumber++;
-			//isVisible = !isVisible;
-			if(loopNumber == NUMBERS_OF_LOOP / 2){
-				int element = (int)getRandom(0, list.size()-1);
-				//this is the element to change
-				while(list.get(element).getClass() == FocusItem.class)
-					element = (int)getRandom(0, list.size()-1);
-				//change the element
-				System.out.println("Element changed");
-				list.get(element).setDimension(60);
+		if(e.getSource() == constantTimer){
+			spinItems();
+		}
+		else
+			if(loopNumber < NumberOfLoops*2){
+				System.out.println("Animation started");
+				loopNumber++;
+				//isVisible = !isVisible;
+				if(loopNumber == NumberOfLoops){
+					int element = (int)getRandom(1, list.size()-1);
+					//this is the element to change
+					//change the element
+					System.out.println("Element changed");
+					list.get(element).setDimension(60);
+					((FocusItem) list.get(0)).changeVisible();
+				}
+				else {
+					((FocusItem) list.get(0)).changeVisible();
+				}
+				//code to do
+				repaint();
+				randomTimer.setInitialDelay((int)(getRandom(150, 400)));
+				randomTimer.restart();
 			}
 			else {
-				Iterator<Drawable> i = list.iterator();
-				while(i.hasNext()){
-					Drawable temp = i.next();
-					if (temp.getClass() == (FocusItem.class)){
-						((FocusItem)temp).changeVisible();
-					}
-				}
+				System.out.println("end of the loop");
+				clearCanvas();
 			}
-			//code to do
-			repaint();
-			randomTimer.setInitialDelay((int)(getRandom(300, 900)));
-			randomTimer.restart();
-		}
-		else {
-			System.out.println("end of the loop");
-		}
-		
 	}
 
 	protected long getRandom(long min, long max){
@@ -86,4 +90,27 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 		return min + (Math.abs(r.nextLong()) % max);
 	}
 	
+	protected void clearCanvas() {
+		list.clear();
+		repaint();
+	}
+	
+	protected void spinItems() {
+		for(int i = 1; i < list.size(); i++){
+			//to put them around the circle: sin(360 * index/count) * radius
+			int number = list.size() -1;
+			positionOfSpinning +=0.02;
+			double tempValue = (360) / number * i;
+			int radius = 300;
+			int dim = 800;
+			//converting from degree to radiant
+			tempValue = tempValue * 2 * Math.PI / 360;
+			tempValue += positionOfSpinning * 2 * Math.PI / 360;
+			int tempY = dim/2 + (int)(Math.cos(tempValue) * radius);
+			int tempX = dim/2 + (int)(Math.sin(tempValue) * radius);
+			list.get(i).xPosition = tempX;
+			list.get(i).yPosition = tempY;
+		}
+		repaint();
+	}
 }
