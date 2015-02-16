@@ -1,4 +1,3 @@
-import java.awt.Color;
 import javax.swing.JFrame;
 
 
@@ -8,7 +7,7 @@ public class Application {
 	private final int DIMENSION = 800;
 	private final int DIM_FOCUS = 100;
 	private final int NUMBER_OF_ITEMS = 12;
-	private final int RADIUS_ITEM_BASIC_DIMENSION = 50;
+	private final int RADIUS_ITEM_BASIC_DIMENSION = 30;
 	private int radius, hasToChange;
 	
 	
@@ -26,13 +25,13 @@ public class Application {
 		
 		radius = 300;
 		
-		ExperimentalCanvas canvas = new ExperimentalCanvas(DIMENSION, false);
+		ExperimentalCanvas canvas = new ExperimentalCanvas(DIMENSION, true);
 		canvas.setSize(DIMENSION, DIMENSION);
 		mainFrame.setVisible(true);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.add(canvas);
 		
-		canvas.createItems(radius, DIM_FOCUS, 30, 5, NUMBER_OF_ITEMS, 8, true, true);
+		canvas.createItems(radius, DIM_FOCUS, RADIUS_ITEM_BASIC_DIMENSION, 2, NUMBER_OF_ITEMS, 12, false, true, true);
 		canvas.startAnimation();
 	}
 }

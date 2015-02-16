@@ -13,17 +13,18 @@ import javax.swing.Timer;
 
 class ExperimentalCanvas extends Canvas implements ActionListener {
 	
-	private short NumberOfLoops;
+	private int NumberOfLoops;
 	protected List<Drawable> list;
 	private Timer randomTimer;
 	private Timer constantTimer;
 	private short loopNumber;
-	private static double positionOfSpinning;
+	private double positionOfSpinning;
 	private boolean spin;
 	private double radius;
 	private double dimension;
 	private boolean bigChange;
 	private boolean changeSize;
+	private boolean isChanging;
 	
 	/**
 	 * create the canvas
@@ -68,6 +69,8 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 	}
 	
 	public void startAnimation(){
+		System.out.println("Loop started");
+		//set initial time?
 		randomTimer.start();
 		if(spin)
 			constantTimer.start();
@@ -82,16 +85,47 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 			if(loopNumber < NumberOfLoops*2){
 				loopNumber++;
 				//isVisible = !isVisible;
-				if(loopNumber == NumberOfLoops){
+				if(loopNumber == NumberOfLoops  && isChanging){
 					int element = (int)getRandom(1, list.size()-1);
 					//this is the element to change
 					//change the element
 					if(changeSize){
+						//inside the changing size
 						if(bigChange){
 							list.get(element).setDimension(list.get(element).getDimension() + list.get(element).getDimension());
 						}
 						else {
 							list.get(element).setDimension(list.get(element).getDimension() + list.get(element).getDimension() / 2 );
+						}
+					}
+					else {
+						//inside the change of color
+						//TODO: question? going darker or brighter?
+						int r = list.get(element).getColor().getRed(), g = list.get(element).getColor().getGreen(), b = list.get(element).getColor().getBlue();
+						if(bigChange){
+							//brighter
+							int change = 100;
+							r = checkColorsize((int)getRandom(r, r + change));
+							g = checkColorsize((int)getRandom(g, g + change));
+							b = checkColorsize((int)getRandom(b, b + change));
+							list.get(element).setColor(checkColorsize(new Color(r, g, b)));
+//							//darker
+//							list.get(element).setColor(currentColor);
+						}
+						else {
+							//brighter
+//							int change = 50;
+//							r = (int)getRandom(r, checkColorsize(r + change));
+//							g = (int)getRandom(g, checkColorsize(g + change));
+//							b = (int)getRandom(b, checkColorsize(b + change));
+//							Color currentColor = new Color(r, g, b);
+//							list.get(element).setColor(currentColor);
+//							//darker
+							int change = 50;
+							r = checkColorsize((int)getRandom(r - change, r));
+							g = checkColorsize((int)getRandom(g - change, g));
+							b = checkColorsize((int)getRandom(b - change, b));
+							list.get(element).setColor(checkColorsize(new Color(r, g, b)));
 						}
 					}
 					
@@ -106,11 +140,47 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 				randomTimer.restart();
 			}
 			else {
-				System.out.println("end of the loop");
-				clearCanvas();
+				System.out.println("End of the loop");
+				stopTasks();
 			}
 	}
 
+	private void stopTasks() {
+		clearCanvas();
+		randomTimer.stop();
+		if(spin)
+			constantTimer.stop();
+	}
+
+	private int checkColorsize(int number){
+		if (number > 254) {
+			return 255;
+		}
+		if (number < 0) {
+			return 1;
+		}
+		return number;
+	}
+	
+	private Color checkColorsize(Color color){
+		int r = color.getRed(), g = color.getGreen(), b = color.getGreen();
+		
+		//check if the color is too bright
+		if( r + g + b > 720)
+		{
+			r -= 16;
+			g -= 16;
+			b -= 16;
+		}
+		//check if it is too dark
+		if (r + g + b < 48){
+			r += 16;
+			g += 16;
+			b += 16;
+		}
+		return new Color(r, g, b);
+	}
+	
 	protected long getRandom(long min, long max){
 		Random r = new Random();
 		return min + (Math.abs(r.nextLong()) % max);
@@ -118,6 +188,7 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 	
 	protected void clearCanvas() {
 		list.clear();
+		System.gc();
 		repaint();
 	}
 	
@@ -139,12 +210,28 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 		repaint();
 	}
 	
-	
-	public void createItems(int radius, int dimensionOfTheFocus, int dimensionOfTheRadius, int deltaChange, int numberOfRadiusItems, int numberOfBlinks, boolean bigChange, boolean changeSize){
+	/**
+	 * This method is the central method that create and dispose all the items
+	 * and also define what the experiment is about by defining if there will
+	 * be a small or big change and if the color or the shape will change
+	 * 
+	 * @param radius distance between the central object and the peripheral objects
+	 * @param dimensionOfTheFocus dimension of the object in the focus
+	 * @param dimensionOfTheRadius dimension of the object in the radius
+	 * @param deltaChange delta in between the radial object can change
+	 * @param numberOfRadiusItems number of item in the radius
+	 * @param numberOfBlinks number of times the central object will blink
+	 * @param bigChange true if there will be a big change, false if the change will be small
+	 * @param changeSize true if the size will change, false if the color
+	 * @param isChanging true if there will be changes
+	 */
+	public void createItems(int radius, int dimensionOfTheFocus, int dimensionOfTheRadius, int deltaChange, int numberOfRadiusItems, int numberOfBlinks, boolean bigChange, boolean changeSize, boolean isChanging){
 		
 		this.radius = radius;
 		this.bigChange = bigChange;
 		this.changeSize = changeSize;
+		this.NumberOfLoops = numberOfBlinks;
+		this.isChanging = isChanging;
 		
 		addDrowableItem(new FocusItem((int)dimension/2 - dimensionOfTheFocus/2, (int)dimension/2 - dimensionOfTheFocus/2, dimensionOfTheFocus, Color.PINK));
 		System.out.println("Created focus item");
@@ -163,8 +250,10 @@ class ExperimentalCanvas extends Canvas implements ActionListener {
 			int tempX = (int)(dimension/2 + (int)(Math.sin(tempValue) * radius));
 			
 			//TODO: change the color or shape? read the file
+			//do we change always the color and size or not?
+			Color c = new Color((int)getRandom(0, 255), (int)getRandom(0, 255), (int)getRandom(0, 255));
 			int dimensionOfTheRadiusShape = (int)getRandom(dimensionOfTheRadius - deltaChange, dimensionOfTheRadius + deltaChange);
-			addDrowableItem(new RadusItem(tempX, tempY, dimensionOfTheRadiusShape, Color.CYAN));
+			addDrowableItem(new RadusItem(tempX, tempY, dimensionOfTheRadiusShape, c));
 			System.out.println("Created radius item " + i);
 		}	
 	}
